@@ -34,14 +34,13 @@ class Environment:
         self.refresh()
 
     def draw(self):
-        PL.subplot(1,3,1)
+        PL.subplot(1,4,1)
         PL.imshow(self.color_repr, interpolation = 'nearest')
-        PL.subplot(1,3,2)
+        PL.subplot(1,4,2)
         PL.plot(self.stats["avgrep"])
         PL.plot(self.stats["maxrep"])
         PL.plot(self.stats["minrep"])
-        PL.subplot(1,3,3)
-        PL.plot(self.stats["pcnt1"])
+        PL.hist(hist_data)
 
     def __getitem__(self, key):
         #if len(key) == 2:
@@ -59,6 +58,7 @@ class Environment:
         """call after you have updated a "frame"."""
         self._data, self._next = self._next, self._data
         totrep, numpred, minrep, maxrep, tot1 = 0, 0, 10, 0, 0
+        self.hist_data = []
         for i in xrange( self.size):
             for j in xrange( self.size):
                 self.int_repr[i,j] = int(self[i,j])
@@ -70,7 +70,7 @@ class Environment:
                     totrep += self[i,j].repRate
                     if self[i,j].repRate < minrep: minrep = self[i,j].repRate
                     if self[i,j].repRate > maxrep: maxrep = self[i,j].repRate
-                    if self[i,j].eats < 0.5: tot1 += 1
+                    hist_data.append(self[i,j].eats)
                     numpred += 1
 
         if numpred > 0:

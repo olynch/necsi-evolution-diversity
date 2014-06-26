@@ -8,6 +8,7 @@ matplotlib.use('TkAgg')
 import random as RD
 import pylab as PL
 import environment as EV
+import sys
 import copy
 
 ##=====================================
@@ -21,7 +22,7 @@ emptyP = 1-(predatorP+prey1P+prey2P)
 both = False
 predatorR, prey1R, prey2R = .2, .2, .2
 deathR = .7
-repRateM, eatsM = .1, .00
+repRateM, eatsM = .1, float(sys.argv[1])
 
 
 ##=====================================
@@ -42,7 +43,11 @@ def looping():
                 return False
     return True
 
-def opeats(e): PREY1 if e == PREY2 else PREY2
+def opeats(e):
+    if e == PREY2:
+        return PREY1
+    if e == PREY1:
+        return PREY2
 
 def step():
     global env
@@ -63,9 +68,12 @@ def step():
                 if p1==True and p2 == True:
                     env[x,y] = EV.Square(RD.choice((PREY1,PREY2)))
             elif env[x,y] == PREY1 or env[x,y] == PREY2:
+                opts = []
                 for nbor in filter((lambda x: x==PREDATOR), nbors):
                     if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
-                        env[x,y] = EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,repRateM), opeats(nbor.eats) if RD.random()<eatsM else nbor.eats)
+                        opts.append(EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,repRateM), opeats(nbor.eats) if RD.random()<eatsM else nbor.eats))
+                if len(opts) > 0:
+                    env[x,y] = RD.choice(opts)
             elif env[x,y] == PREDATOR:
                 if RD.random()<deathR:
                     env[x,y]=EV.Square(EMPTY)

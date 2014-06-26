@@ -23,6 +23,8 @@ predatorR, prey1R, prey2R = .2, .2, .2
 deathR = .2
 repRateM, eatsM = .1, .01
 
+whenloop=1
+
 
 ##=====================================
 ## Section 3: Define Three Functions
@@ -34,23 +36,29 @@ def init():
     env_prev = copy.deepcopy(env)
 
 def draw():
-    for x in xrange(size):
-        for y in xrange(size):
-            print x,y, env[x,y].kind
-    PL.imshow(env.int_repr)
+    #for x in xrange(size):
+        #for y in xrange(size):
+            #print x,y, env[x,y].kind
+    PL.imshow(env.int_repr, interpolation = 'nearest')
 
 def looping():
-    if env._data == env_prev._next
+    for x in xrange(size):
+        for y in xrange(size):
+            if env._data[x,y] != env_prev._next[x][y]:
+                return False
+    return True
 
 def opeats(e): PREY1 if e == PREY2 else PREY2
 
 def step():
-    global env, env_prev
+    global env, env_prev, whenloop
     env_prev=copy.deepcopy(env)
     for x in xrange(size):
         for y in xrange(size):
+            env[x,y] = env[x,y]
             nbors = env.neighbors(x,y)
             if env[x,y]==EMPTY:
+                print "here!"
                 p1=False
                 p2=False
                 if RD.random()<(1-(1-prey1R)**len(filter((lambda x: x==PREY1), nbors))):
@@ -66,11 +74,15 @@ def step():
                     if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
                         env[x,y] = EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,repRateM), opeats(nbor.eats) if RD.random()<eatsM else nbor.eats)
             elif env[x,y] == PREDATOR:
+                print "GAH"
                 if RD.random()<deathR:
                     env[x,y]=EV.Square(EMPTY)
             else:
                 print "environment wasn't a resonable value"
-        print looping():
+    env.refresh()
+    if not looping(): whenloop += 1
+    print looping()
+    print whenloop
     #global env
     #for x in xrange(size):
         #for y in xrange(size):

@@ -39,7 +39,7 @@ def draw():
     #for x in xrange(size):
         #for y in xrange(size):
             #print x,y, env[x,y].kind
-    PL.imshow(env.int_repr, interpolation = 'nearest')
+    PL.imshow(env.color_repr, interpolation = 'nearest')
 
 def looping():
     for x in xrange(size):

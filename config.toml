@@ -1,4 +1,4 @@
-size = 100
+size = 50
 deathRate = 0.7
 
 [dist]
@@ -7,8 +7,8 @@ Prey2 = 0.10
 Predator = 0.05
 
 [repRate]
-Prey1 = 0.08
-Prey2 = 0.08
+Prey1 = 0.095
+Prey2 = 0.095
 Predator = 0.2
 
 [mut]

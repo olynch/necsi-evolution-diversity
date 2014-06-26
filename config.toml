@@ -3,12 +3,12 @@ deathRate = 0.7
 
 [dist]
 Prey1 = 0.10
-Prey2 = 0.00
+Prey2 = 0.10
 Predator = 0.05
 
 [repRate]
-Prey1 = 0.10
-Prey2 = 0.01
+Prey1 = 0.08
+Prey2 = 0.08
 Predator = 0.2
 
 [mut]

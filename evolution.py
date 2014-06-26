@@ -33,7 +33,7 @@ c = {}
 ##=====================================
 
 def init():
-    global env, c, datasave
+    global env, c
     with open("config.toml") as conffile:
         c = toml.loads(conffile.read())
 
@@ -42,10 +42,7 @@ def init():
     env = EV.Environment(c["size"], c["dist"])
 
 def draw():
-    PL.subplot(1,2,1)
-    PL.imshow(env.color_repr, interpolation = 'nearest')
-    PL.subplot(1,2,2)
-    PL.plot(datasave)
+    env.draw()
 
 def looping():
     for x in xrange(c["size"]):
@@ -65,11 +62,7 @@ def step():
     for x in xrange(c["size"]):
         for y in xrange(c["size"]):
             env[x,y] = env[x,y]
-            nbors = []
-            for i in (-1,0,1):
-                for j in (-1,0,1):
-                    if i != 0 or j != 0:
-                        nbors.append(env[x+i,y+j])
+            nbors = env.neighbors(x,y)
             if env[x,y]==EMPTY:
                 p1=False
                 p2=False
@@ -95,8 +88,6 @@ def step():
                 print "environment wasn't a resonable value"
             del nbors
     env.refresh()
-    print env.stats["avgrep"]
-    datasave.append(env.stats["avgrep"])
 
 ##=====================================
 ## Section 4: [Optional] Create Setter/Getter Functions for Model Parameters

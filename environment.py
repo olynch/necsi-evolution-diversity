@@ -1,5 +1,6 @@
 from numpy import *
 import random as rd
+import pylab as PL
 
 random.seed()
 
@@ -21,16 +22,26 @@ class Environment:
         self.color_repr = empty((size, size, 3), dtype=float)
         self.probability_map = probability_map
         self.size = size
-        self.stats = {"avgrep": 0, "numpred": 0}
+        self.stats = {"avgrep": [], "maxrep": [], "minrep": [], "pcnt1": []}
         self._init_values()
 
     def _init_values(self):
-        for i in range(0, self.size):
-            for j in range(0, self.size):
+        for i in xrange( self.size):
+            for j in xrange( self.size):
                 newSquare = Square(self.probability_map)
                 self._data[i,j] = newSquare
                 self._next[i,j] = newSquare
         self.refresh()
+
+    def draw(self):
+        PL.subplot(1,3,1)
+        PL.imshow(self.color_repr, interpolation = 'nearest')
+        PL.subplot(1,3,2)
+        PL.plot(self.stats["avgrep"])
+        PL.plot(self.stats["maxrep"])
+        PL.plot(self.stats["minrep"])
+        PL.subplot(1,3,3)
+        PL.plot(self.stats["pcnt1"])
 
     def __getitem__(self, key):
         #if len(key) == 2:
@@ -47,9 +58,9 @@ class Environment:
     def refresh(self):
         """call after you have updated a "frame"."""
         self._data, self._next = self._next, self._data
-        totrep, numpred = 0, 0
-        for i in range(0, self.size):
-            for j in range(0, self.size):
+        totrep, numpred, minrep, maxrep, tot1 = 0, 0, 10, 0, 0
+        for i in xrange( self.size):
+            for j in xrange( self.size):
                 self.int_repr[i,j] = int(self[i,j])
                 rgb = self[i,j].rgb()
                 for k in range(3):
@@ -57,12 +68,16 @@ class Environment:
                 # get statistics
                 if self[i,j] == PREDATOR:
                     totrep += self[i,j].repRate
+                    if self[i,j].repRate < minrep: minrep = self[i,j].repRate
+                    if self[i,j].repRate > maxrep: maxrep = self[i,j].repRate
+                    if self[i,j].eats == PREY1: tot1 += 1
                     numpred += 1
 
         if numpred > 0:
-            self.stats["avgrep"] = totrep/numpred
-        self.stats["numpred"] = numpred
-
+            self.stats["avgrep"].append(totrep/numpred)
+            self.stats["pcnt1"].append(tot1/float(numpred))
+        self.stats["minrep"].append(minrep)
+        self.stats["maxrep"].append(maxrep)
 
 
     def neighbors(self, x, y):

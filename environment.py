@@ -40,7 +40,7 @@ class Environment:
         PL.plot(self.stats["avgrep"])
         PL.plot(self.stats["maxrep"])
         PL.plot(self.stats["minrep"])
-        PL.hist(hist_data)
+        PL.hist(self.hist_data)
 
     def __getitem__(self, key):
         #if len(key) == 2:

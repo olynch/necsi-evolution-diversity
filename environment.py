@@ -70,7 +70,7 @@ class Environment:
                     totrep += self[i,j].repRate
                     if self[i,j].repRate < minrep: minrep = self[i,j].repRate
                     if self[i,j].repRate > maxrep: maxrep = self[i,j].repRate
-                    hist_data.append(self[i,j].eats)
+                    self.hist_data.append(self[i,j].eats)
                     numpred += 1
 
         if numpred > 0:

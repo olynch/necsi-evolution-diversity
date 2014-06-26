@@ -34,12 +34,13 @@ class Environment:
         self.refresh()
 
     def draw(self):
-        PL.subplot(1,4,1)
+        PL.subplot(1,3,1)
         PL.imshow(self.color_repr, interpolation = 'nearest')
-        PL.subplot(1,4,2)
+        PL.subplot(1,3,2)
         PL.plot(self.stats["avgrep"])
         PL.plot(self.stats["maxrep"])
         PL.plot(self.stats["minrep"])
+        PL.subplot(1,3,3)
         PL.hist(self.hist_data)
 
     def __getitem__(self, key):

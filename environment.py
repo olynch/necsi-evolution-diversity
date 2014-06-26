@@ -18,6 +18,7 @@ class Environment:
         self._data = empty((size, size), dtype=object)
         self._next = empty((size, size), dtype=object)
         self.int_repr = empty((size, size), dtype=int)
+        self.color_repr = empty((size, size, 3), dtype=float)
         self.probability_map = probability_map
         self.size = size
         self._init_values()
@@ -48,6 +49,10 @@ class Environment:
         for i in range(0, self.size):
             for j in range(0, self.size):
                 self.int_repr[i,j] = int(self[i,j])
+                rgb = self[i,j].rgb()
+                for k in range(3):
+                    self.color_repr[i,j,k] = rgb[k]
+
 
     def neighbors(self, x, y):
         neighborList = []
@@ -96,3 +101,13 @@ class Square:
 
     def __int__(self):
         return self.kind
+
+    def rgb(self):
+        if self.kind == EMPTY:
+            return (1,1,1)
+        elif self.kind == PREY1:
+            return (0,1,0)
+        elif self.kind == PREY2:
+            return (0,0,1)
+        elif self.kind == PREDATOR:
+            return (1,0,0)

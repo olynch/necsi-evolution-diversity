@@ -70,7 +70,7 @@ class Environment:
                     totrep += self[i,j].repRate
                     if self[i,j].repRate < minrep: minrep = self[i,j].repRate
                     if self[i,j].repRate > maxrep: maxrep = self[i,j].repRate
-                    if self[i,j].eats == PREY1: tot1 += 1
+                    if self[i,j].eats < 0.5: tot1 += 1
                     numpred += 1
 
         if numpred > 0:

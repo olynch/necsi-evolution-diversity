@@ -21,6 +21,7 @@ class Environment:
         self.color_repr = empty((size, size, 3), dtype=float)
         self.probability_map = probability_map
         self.size = size
+        self.stats = {"avgrep": 0, "numpred": 0}
         self._init_values()
 
     def _init_values(self):
@@ -46,12 +47,22 @@ class Environment:
     def refresh(self):
         """call after you have updated a "frame"."""
         self._data, self._next = self._next, self._data
+        totrep, numpred = 0, 0
         for i in range(0, self.size):
             for j in range(0, self.size):
                 self.int_repr[i,j] = int(self[i,j])
                 rgb = self[i,j].rgb()
                 for k in range(3):
                     self.color_repr[i,j,k] = rgb[k]
+                # get statistics
+                if self[i,j] == PREDATOR:
+                    totrep += self[i,j].repRate
+                    numpred += 1
+
+        if numpred > 0:
+            self.stats["avgrep"] = totrep/numpred
+        self.stats["numpred"] = numpred
+
 
 
     def neighbors(self, x, y):

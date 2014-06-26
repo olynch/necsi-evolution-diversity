@@ -16,12 +16,9 @@ import toml
 ## Section 2: Define Model Parameters
 ##=====================================
 
-with open("config.toml") as conffile:
-    c = toml.loads(conffile.read())
-
-c["dist"]["Empty"] = 1 - (c["dist"]["Prey1"] + c["dist"]["Prey2"] + c["dist"]["Predator"])
 
 EMPTY, PREY1, PREY2, PREDATOR = 0,1,2,3
+c = {}
 #size = 50
 #predatorP, prey1P, prey2P = .15, .15, .15
 #emptyP = 1-(predatorP+prey1P+prey2P)
@@ -36,11 +33,19 @@ EMPTY, PREY1, PREY2, PREDATOR = 0,1,2,3
 ##=====================================
 
 def init():
-    global env
+    global env, c, datasave
+    with open("config.toml") as conffile:
+        c = toml.loads(conffile.read())
+
+    c["dist"]["Empty"] = 1 - (c["dist"]["Prey1"] + c["dist"]["Prey2"] + c["dist"]["Predator"])
+    datasave = []
     env = EV.Environment(c["size"], c["dist"])
 
 def draw():
+    PL.subplot(1,2,1)
     PL.imshow(env.color_repr, interpolation = 'nearest')
+    PL.subplot(1,2,2)
+    PL.plot(datasave)
 
 def looping():
     for x in xrange(c["size"]):
@@ -56,8 +61,7 @@ def opeats(e):
         return PREY2
 
 def step():
-    global env
-    env_prev=copy.deepcopy(env)
+    global env, datasave
     for x in xrange(c["size"]):
         for y in xrange(c["size"]):
             env[x,y] = env[x,y]
@@ -77,7 +81,7 @@ def step():
                 opts = []
                 for nbor in filter((lambda x: x==PREDATOR), nbors):
                     if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
-                        opts.append(EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,c["mut"]["repRate"]), opeats(nbor.eats) if RD.random()<c["mut"]["repRate"] else nbor.eats))
+                        opts.append(EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,c["mut"]["repRate"]), opeats(nbor.eats) if RD.random()<c["mut"]["eats"] else nbor.eats))
                 if len(opts) > 0:
                     env[x,y] = RD.choice(opts)
             elif env[x,y] == PREDATOR:
@@ -86,6 +90,8 @@ def step():
             else:
                 print "environment wasn't a resonable value"
     env.refresh()
+    print env.stats["avgrep"]
+    datasave.append(env.stats["avgrep"])
 
 ##=====================================
 ## Section 4: [Optional] Create Setter/Getter Functions for Model Parameters

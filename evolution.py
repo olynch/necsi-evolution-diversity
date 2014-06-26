@@ -30,10 +30,10 @@ def opeats(e): 1 if e == 2 else 2
 
 def init():
     global env
-    env = EV.Evnironment(size, {"Empty": emptyP, "Predator": predatorP, "Prey1": prey1P, "Prey2": prey2P})
+    env = EV.Environment(size, {"Empty": emptyP, "Predator": predatorP, "Prey1": prey1P, "Prey2": prey2P})
 
 def draw():
-    PL.imshow([[x.kind for x in xs] for xs in env], cmap=plt.cm.earth)
+    PL.imshow(env.int_repr)#, cmap=plt.cm.earth)
 
 def step():
     global env
@@ -53,7 +53,7 @@ def step():
                     env[x,y] = RD.choice(EV.Square(PREY1),EV.Square(PREY2))
             elif env[x,y]==PREY1 or env[x,y] == PREY2:
                 for nbor in filter((lambda x: x==PREDATOR), nbors):
-                    if nbor.eats == env[x,y] && RD.random()<nbor.repRate:
+                    if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
                         env[x,y] = EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,repRateM), opeats(nbor.eats) if RD.random()<eatsM else nbor.eats)
             elif env[x,y]==PREDATOR:
                 if RD.random()<deathR:

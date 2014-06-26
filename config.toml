@@ -1,0 +1,16 @@
+size = 50
+deathRate = 0.7
+
+[dist]
+Prey1 = 0.15
+Prey2 = 0.15
+Predator = 0.15
+
+[repRate]
+Prey1 = 0.2
+Prey2 = 0.2
+Predator = 0.2
+
+[mut]
+repRate = 0.1
+eats = 0.0

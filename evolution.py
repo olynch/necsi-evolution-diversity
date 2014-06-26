@@ -65,7 +65,11 @@ def step():
     for x in xrange(c["size"]):
         for y in xrange(c["size"]):
             env[x,y] = env[x,y]
-            nbors = env.neighbors(x,y)
+            nbors = []
+            for i in (-1,0,1):
+                for j in (-1,0,1):
+                    if i != 0 or j != 0:
+                        nbors.append(env[x+i,y+j])
             if env[x,y]==EMPTY:
                 p1=False
                 p2=False
@@ -89,6 +93,7 @@ def step():
                     env[x,y]=EV.Square(EMPTY)
             else:
                 print "environment wasn't a resonable value"
+            del nbors
     env.refresh()
     print env.stats["avgrep"]
     datasave.append(env.stats["avgrep"])

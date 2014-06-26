@@ -33,10 +33,10 @@ class Environment:
         self.refresh()
 
     def __getitem__(self, key):
-        if len(key) == 2:
-            return self._data[key[0] % self.size, key[1] % self.size]
-        else:
-            raise ValueError('must pass a tuple of len 2 ie. x[4,5]')
+        #if len(key) == 2:
+        return self._data[key[0] % self.size, key[1] % self.size]
+        #else:
+            #raise ValueError('must pass a tuple of len 2 ie. x[4,5]')
 
     def __setitem__(self, key, value):
         if len(key) == 2:
@@ -99,10 +99,10 @@ class Square:
                 self.eats = rd.randrange(1,3)
 
     def __eq__(self, other):
-        if type(other) == int:
-            return self.kind == other
-        elif type(other) == type(self):
-            return self.kind == other.kind
+        #if type(other) == int:
+        return self.kind == other
+        #elif type(other) == type(self):
+            #return self.kind == other.kind
 
     def __ne__(self, other):
         return not self == other

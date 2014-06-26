@@ -82,13 +82,13 @@ def step():
             elif env[x,y] == PREY1 or env[x,y] == PREY2:
                 opts = []
                 for nbor in filter((lambda x: x==PREDATOR), nbors):
-                    if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
-                        opts.append(EV.Square(PREDATOR, cap(nbor.repRate+RD.gauss(0,c["mut"]["repRate"])), opeats(nbor.eats) if RD.random()<c["mut"]["eats"] else nbor.eats))
+                    if ((nbor.eats < 0.5) == (env[x,y].kind == 1)) and RD.random()<nbor.repRate: #if nbor eats this, and can reproduce
+                        opts.append(EV.Square(PREDATOR, cap(nbor.repRate+RD.gauss(0,c["mut"]["repRate"])), cap(nbor.eats + RD.gauss(0, c["mut"]["eats"]))))
                 if len(opts) > 0:
                     env[x,y] = RD.choice(opts)
             elif env[x,y] == PREDATOR:
                 if RD.random()<c["deathRate"]:
-                    env[x,y]=EV.Square(EMPTY)
+                    env[x,y] = EV.Square(EMPTY)
             else:
                 print "environment wasn't a resonable value"
             del nbors

@@ -114,7 +114,7 @@ class Square:
             else:
                 self.kind = PREDATOR
                 self.repRate = 0.5
-                self.eats = rd.randrange(1,3)
+                self.eats = rd.gauss(0.5, 0.1)
 
     def __eq__(self, other):
         #if type(other) == int:

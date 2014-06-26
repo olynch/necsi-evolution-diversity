@@ -19,7 +19,7 @@ import toml
 with open("config.toml") as conffile:
     c = toml.loads(conffile.read())
 
-c["dist"]["Empty"] = 1 - (config["dist"]["Prey1"] + config["dist"]["Prey2"] + config["dist"]["Predator"])
+c["dist"]["Empty"] = 1 - (c["dist"]["Prey1"] + c["dist"]["Prey2"] + c["dist"]["Predator"])
 
 EMPTY, PREY1, PREY2, PREDATOR = 0,1,2,3
 #size = 50
@@ -37,7 +37,7 @@ EMPTY, PREY1, PREY2, PREDATOR = 0,1,2,3
 
 def init():
     global env
-    env = EV.Environment(c["size"], config["dist"])
+    env = EV.Environment(c["size"], c["dist"])
 
 def draw():
     PL.imshow(env.color_repr, interpolation = 'nearest')

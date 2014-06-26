@@ -17,7 +17,7 @@ import toml
 ##=====================================
 
 with open("config.toml") as conffile:
-	c = toml.loads(conffile.read())
+    c = toml.loads(conffile.read())
 
 c["dist"]["Empty"] = 1 - (config["dist"]["Prey1"] + config["dist"]["Prey2"] + config["dist"]["Predator"])
 
@@ -77,7 +77,7 @@ def step():
                 opts = []
                 for nbor in filter((lambda x: x==PREDATOR), nbors):
                     if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
-                        env[x,y] = EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,c["mut"]["repRate"]), opeats(nbor.eats) if RD.random()<c["mut"]["repRate"] else nbor.eats)
+                        opts.append(EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,c["mut"]["repRate"]), opeats(nbor.eats) if RD.random()<c["mut"]["repRate"] else nbor.eats))
                 if len(opts) > 0:
                     env[x,y] = RD.choice(opts)
             elif env[x,y] == PREDATOR:

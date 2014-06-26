@@ -87,6 +87,9 @@ class Square:
             return self.kind == other
         elif type(other) == type(self):
             return self.kind == other.kind
+
+    def __ne__(self, other):
+        return not self == other
     
     def __repr__(self):
         return "<Square with kind={0}, repRate={1}, eats={2}>".format(self.kind, self.repRate, self.eats)

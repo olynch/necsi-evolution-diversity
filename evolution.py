@@ -8,6 +8,7 @@ matplotlib.use('TkAgg')
 import random as RD
 import pylab as PL
 import environment as EV
+import sys
 import copy
 import toml
 
@@ -48,7 +49,11 @@ def looping():
                 return False
     return True
 
-def opeats(e): PREY1 if e == PREY2 else PREY2
+def opeats(e):
+    if e == PREY2:
+        return PREY1
+    if e == PREY1:
+        return PREY2
 
 def step():
     global env
@@ -69,9 +74,12 @@ def step():
                 if p1==True and p2 == True:
                     env[x,y] = EV.Square(RD.choice((PREY1,PREY2)))
             elif env[x,y] == PREY1 or env[x,y] == PREY2:
+                opts = []
                 for nbor in filter((lambda x: x==PREDATOR), nbors):
                     if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
                         env[x,y] = EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,c["mut"]["repRate"]), opeats(nbor.eats) if RD.random()<c["mut"]["repRate"] else nbor.eats)
+                if len(opts) > 0:
+                    env[x,y] = RD.choice(opts)
             elif env[x,y] == PREDATOR:
                 if RD.random()<c["deathRate"]:
                     env[x,y]=EV.Square(EMPTY)

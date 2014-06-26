@@ -25,8 +25,10 @@ class Environment:
     def _init_values(self):
         for i in range(0, self.size):
             for j in range(0, self.size):
-                self._data[i,j] = Square(self.probability_map)
-                self._next[i,j] = Square(EMPTY)
+                newSquare = Square(self.probability_map)
+                self._data[i,j] = newSquare
+                self._next[i,j] = newSquare
+        self.refresh()
 
     def __getitem__(self, key):
         if len(key) == 2:

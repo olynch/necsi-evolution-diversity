@@ -17,6 +17,7 @@ class Environment:
     def __init__(self, size, probability_map):
         self._data = empty((size, size), dtype=object)
         self._next = empty((size, size), dtype=object)
+        self.int_repr = empty((size, size), dtype=int)
         self.probability_map = probability_map
         self.size = size
         self._init_values()
@@ -42,6 +43,9 @@ class Environment:
     def refresh(self):
         """call after you have updated a "frame"."""
         self._data, self._next = self._next, self._data
+        for i in range(0, self.size):
+            for j in range(0, self.size):
+                self.int_repr[i,j] = int(self[i,j])
 
     def neighbors(self, x, y):
         neighborList = []
@@ -84,3 +88,6 @@ class Square:
     
     def __repr__(self):
         return "<Square with kind={0}, repRate={1}, eats={2}>".format(self.kind, self.repRate, self.eats)
+
+    def __int__(self):
+        return self.kind

@@ -82,10 +82,13 @@ class Environment:
 
     def neighbors(self, x, y):
         neighborList = []
-        for i in (-1, 0, 1):
-            for j in (-1, 0, 1):
-                if i != 0 or j != 0:
-                    neighborList.append(self[x + i, y + j])
+        #for i in (-1, 0, 1):
+            #for j in (-1, 0, 1):
+                #if i != 0 or j != 0:
+                    #neighborList.append(self[x + i, y + j])
+        for i in (-1,1):
+            neighborList.append(self[x+i, y])
+            neighborList.append(self[x, y+i])
         return neighborList
 
 class Square:
@@ -110,7 +113,7 @@ class Square:
                 self.repRate, self.eats = None, None
             else:
                 self.kind = PREDATOR
-                self.repRate = rd.random()
+                self.repRate = 0.5
                 self.eats = rd.randrange(1,3)
 
     def __eq__(self, other):

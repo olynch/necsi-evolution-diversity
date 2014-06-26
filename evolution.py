@@ -57,6 +57,11 @@ def opeats(e):
     if e == PREY1:
         return PREY2
 
+def cap(x):
+    if x > 1: return 1
+    elif x < 0: return 0
+    else: return x
+
 def step():
     global env, datasave
     for x in xrange(c["size"]):
@@ -78,7 +83,7 @@ def step():
                 opts = []
                 for nbor in filter((lambda x: x==PREDATOR), nbors):
                     if nbor.eats == env[x,y] and RD.random()<nbor.repRate:
-                        opts.append(EV.Square(PREDATOR, nbor.repRate+RD.gauss(0,c["mut"]["repRate"]), opeats(nbor.eats) if RD.random()<c["mut"]["eats"] else nbor.eats))
+                        opts.append(EV.Square(PREDATOR, cap(nbor.repRate+RD.gauss(0,c["mut"]["repRate"])), opeats(nbor.eats) if RD.random()<c["mut"]["eats"] else nbor.eats))
                 if len(opts) > 0:
                     env[x,y] = RD.choice(opts)
             elif env[x,y] == PREDATOR:

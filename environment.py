@@ -108,6 +108,9 @@ class Square:
         elif self.kind == PREY1:
             return (0,1,0)
         elif self.kind == PREY2:
-            return (0,0,1)
+            return (0,.5,0)
         elif self.kind == PREDATOR:
-            return (1,0,0)
+            if self.eats == PREY1:
+                return (1,0,0)
+            else:
+                return (.5,0,0)

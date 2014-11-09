@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11 -O2 -g    CMakeFiles/Test.dir/test_env.cpp.o CMakeFiles/Test.dir/environment.cpp.o CMakeFiles/Test.dir/ctoml/toml.cc.o CMakeFiles/Test.dir/ctoml/tomlvalue.cc.o  -o Test -rdynamic 

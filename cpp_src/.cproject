@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="cdt.managedbuild.config.xlc.exe.debug.2076319016">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.xlc.exe.debug.2076319016" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.errorparsers.xlc.XlcErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="exe" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.errorparsers.xlc.XlcErrorParser" id="cdt.managedbuild.config.xlc.exe.debug.2076319016" name="Debug" parent="cdt.managedbuild.config.xlc.exe.debug">
+					<folderInfo id="cdt.managedbuild.config.xlc.exe.debug.2076319016." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.xlc.exe.debug.1338997799" name="XL C/C++ Tool Chain" superClass="cdt.managedbuild.toolchain.xlc.exe.debug">
+							<targetPlatform archList="all" id="cdt.managedbuild.target.xlc.platform.exe.debug.680999211" name="Debug Platform" osList="all" superClass="cdt.managedbuild.target.xlc.platform.exe.debug"/>
+							<builder buildPath="${workspace_loc:/necsi-evolution-diversity}/Debug" id="org.eclipse.cdt.manangedbuilder.xlc.builder.exe.debug.1414958263" managedBuildOn="true" name="Gnu Make Builder.Debug" superClass="org.eclipse.cdt.manangedbuilder.xlc.builder.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.xlc.cpp.compiler.exe.debug.1524898089" name="Local XL C++ Compiler" superClass="cdt.managedbuild.tool.xlc.cpp.compiler.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.xlc.c.compiler.exe.debug.1307135914" name="Local XL C Compiler" superClass="cdt.managedbuild.tool.xlc.c.compiler.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.xlc.c.linker.exe.debug.616817939" name="XL C Executable Linker" superClass="cdt.managedbuild.tool.xlc.c.linker.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.xlc.cpp.linker.exe.debug.1214116098" name="XL C++ Executable Linker" superClass="cdt.managedbuild.tool.xlc.cpp.linker.exe.debug"/>
+							<tool id="cdt.managedbuild.tool.xlc.assembler.exe.debug.1377182924" name="XL Assembler" superClass="cdt.managedbuild.tool.xlc.assembler.exe.debug"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="cdt.managedbuild.config.xlc.exe.release.1413643734">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.xlc.exe.release.1413643734" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.errorparsers.xlc.XlcErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="exe" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.errorparsers.xlc.XlcErrorParser" id="cdt.managedbuild.config.xlc.exe.release.1413643734" name="Release" parent="cdt.managedbuild.config.xlc.exe.release">
+					<folderInfo id="cdt.managedbuild.config.xlc.exe.release.1413643734." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.xlc.exe.release.448889917" name="XL C/C++ Tool Chain" superClass="cdt.managedbuild.toolchain.xlc.exe.release">
+							<targetPlatform archList="all" id="cdt.managedbuild.target.xlc.platform.exe.release.1107442269" name="Release Platform" osList="all" superClass="cdt.managedbuild.target.xlc.platform.exe.release"/>
+							<builder buildPath="${workspace_loc:/necsi-evolution-diversity}/Release" id="org.eclipse.cdt.managedbuilder.xlc.builder.release.919709889" managedBuildOn="true" name="Gnu Make Builder.Release" superClass="org.eclipse.cdt.managedbuilder.xlc.builder.release"/>
+							<tool id="cdt.managedbuild.tool.xlc.cpp.compiler.exe.release.1893818834" name="Local XL C++ Compiler" superClass="cdt.managedbuild.tool.xlc.cpp.compiler.exe.release"/>
+							<tool id="cdt.managedbuild.tool.xlc.c.compiler.exe.release.434209022" name="Local XL C Compiler" superClass="cdt.managedbuild.tool.xlc.c.compiler.exe.release"/>
+							<tool id="cdt.managedbuild.tool.xlc.c.linker.exe.release.2007581183" name="XL C Executable Linker" superClass="cdt.managedbuild.tool.xlc.c.linker.exe.release"/>
+							<tool id="cdt.managedbuild.tool.xlc.cpp.linker.exe.release.1137138409" name="XL C++ Executable Linker" superClass="cdt.managedbuild.tool.xlc.cpp.linker.exe.release"/>
+							<tool id="cdt.managedbuild.tool.xlc.assembler.exe.release.627548509" name="XL Assembler" superClass="cdt.managedbuild.tool.xlc.assembler.exe.release"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="necsi-evolution-diversity.cdt.managedbuild.target.xlc.exe.1946849231" name="Executable (XL C/C++)" projectType="cdt.managedbuild.target.xlc.exe"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>

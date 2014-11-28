@@ -1,3 +1,7 @@
 *.pyc
 __pycache__/*
 *.swp
+*CMakeCache.txt
+*CMakeFiles/*
+*build/*
+*cmake_install.cmake

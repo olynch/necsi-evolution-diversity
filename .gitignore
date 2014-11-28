@@ -3,5 +3,5 @@ __pycache__/*
 *.swp
 *CMakeCache.txt
 *CMakeFiles/*
-*build/*
+*build*
 *cmake_install.cmake

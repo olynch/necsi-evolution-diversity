@@ -2,7 +2,6 @@
 #include "prob_dist.h"
 
 ProbDist * ProbDist_from_py_dict(PyObject *dict) {
-	printf("In ProbDist_from_py_dict\n");
 	PyObject *dist = PyDict_GetItemString(dict, "dist");
 	PyObject *repRate = PyDict_GetItemString(dict, "repRate");
 	PyObject *mut = PyDict_GetItemString(dict, "mut");

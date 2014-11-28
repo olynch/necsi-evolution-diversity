@@ -7,6 +7,7 @@
 #include "square.h"
 #include "gsl_rng.h"
 #include "gsl_randist.h"
+#include "common.h"
 
 #ifndef GRID_H
 #define GRID_H

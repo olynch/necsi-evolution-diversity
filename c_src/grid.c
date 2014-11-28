@@ -1,13 +1,11 @@
 #include "grid.h"
-#define RD() gsl_ran_flat(self->rand_eng, 0.0, 1.0)
-#define REP_RATE_RD() gsl_ran_gaussian(self->rand_eng, self->dist->mut_repRate)
-#define EATS_RATE_RD() gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats)
+#define gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats) gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats)
 
 Grid * Grid_create(ProbDist *dist) {
 	int size = dist->size;
 	Grid *self = malloc(sizeof(Grid));
 	self->rand_eng = gsl_rand_alloc(gsl_rng_mt19937);
-	ProbDist *copy_of_dist = malloc(sizeof(Square));
+	ProbDist *copy_of_dist = malloc(sizeof(ProbDist));
 	*copy_of_dist = *dist;
 	self->dist = copy_of_dist;
 	self->size = size;
@@ -87,14 +85,14 @@ void Grid_step(Grid *self) {
 							++numPrey2;
 					}
 				}
-				if (RD() < (1 - pow(1 - self->dist->repRate_prey1, numPrey1))) {
+				if (gsl_ran_flat(self->rand_eng, 0.0, 1.0) < (1 - pow(1 - self->dist->repRate_prey1, numPrey1))) {
 					prey1reproduces = true;
 				}
-				if (RD() < (1 - pow(1 - self->dist->repRate_prey2, numPrey2))) {
+				if (gsl_ran_flat(self->rand_eng, 0.0, 1.0) < (1 - pow(1 - self->dist->repRate_prey2, numPrey2))) {
 					prey2reproduces = true;
 				}
 				if (prey1reproduces && prey2reproduces) {
-					next->kind = (int) floor(RD() * 2 + 1);
+					next->kind = (int) floor(gsl_ran_flat(self->rand_eng, 0.0, 1.0) * 2 + 1);
 				}
 				else if (prey1reproduces) {
 					next->kind = 1;
@@ -109,21 +107,21 @@ void Grid_step(Grid *self) {
 				for (int k = -1; k <= 1; ++k) {
 					for (int l = -1 ; <= 1; ++l) {
 						pred = Grid_get_cur(self, i + k, j + l);
-						if (pred->type == 3 && RD() < pred->repRate) {
+						if (pred->type == 3 && gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
 							opts[opts_size] = pred;
 							opts_size++;
 						}
 					}
 				}
 				if (opts_size > 0) {
-					Square *opt = opts[floor(RD() * opts_size)];
+					Square *opt = opts[floor(gsl_ran_flat(self->rand_eng, 0.0, 1.0) * opts_size)];
 					next->kind = 3;
-					next->repRate = contain_to_0_1(opt->repRate + REP_RATE_RD());
-					next->eats = contain_to_0_1(opt->eats + EATS_RATE_RD());
+					next->repRate = contain_to_0_1(opt->repRate + gsl_ran_gaussian(self->rand_eng, self->dist->mut_repRate));
+					next->eats = contain_to_0_1(opt->eats + gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats));
 				}
 			}
 			else if (cur->type == PREDATOR) {
-				if (RD() < self->deathRate) {
+				if (gsl_ran_flat(self->rand_eng, 0.0, 1.0) < self->deathRate) {
 					next->kind = 0;
 				}
 			}

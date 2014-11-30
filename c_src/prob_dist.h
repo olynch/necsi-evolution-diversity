@@ -4,7 +4,7 @@
  */
 #include "Python.h"
 
-#ifndef CONFIG_H 
+#ifndef PROB_DIST_H
 #define PROB_DIST_H
 
 typedef struct {

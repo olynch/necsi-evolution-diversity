@@ -5,17 +5,13 @@
 
 #include "prob_dist.h"
 #include "square.h"
-#include "gsl_rng.h"
-#include "gsl_randist.h"
+#include "gsl/gsl_rng.h"
+#include "gsl/gsl_randist.h"
 #include "common.h"
+#include <stdbool.h>
 
 #ifndef GRID_H
 #define GRID_H
-
-const int EMPTY = 0;
-const int PREY1 = 1;
-const int PREY2 = 2;
-const int PREDATOR = 3;
 
 typedef Square *grid_data;
 
@@ -29,6 +25,8 @@ typedef struct {
 
 Grid * Grid_new(void);
 Grid * Grid_create(ProbDist *);
+void Grid_seed(Grid *);
+void Grid_dealloc(Grid *);
 void Grid_refresh(Grid *);
 void Grid_step(Grid *);
 void Grid_print(Grid *);

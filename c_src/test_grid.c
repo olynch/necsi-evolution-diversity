@@ -10,7 +10,8 @@ int main(int argc, char *argv[])
 	printf("*** Grid_new PASSED TEST \n");
 
 	printf("*** TESTING Grid_create ****\n");
-
+	
+	Py_Initialize();
 	PyObject *test_dict = PyDict_New();
 	PyObject *dist_dict = PyDict_New();
 	PyObject *mut_dict = PyDict_New();
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
 	PyDict_SetItemString(test_dict, "dist", dist_dict);
 	PyDict_SetItemString(test_dict, "repRate", repRate_dict);
 	PyDict_SetItemString(test_dict, "mut", mut_dict);
-	PyDict_SetItemString(test_dict, "size", PyInt_FromInt(10));
+	PyDict_SetItemString(test_dict, "size", PyInt_FromLong(10l));
 	PyDict_SetItemString(test_dict, "deathRate", PyFloat_FromDouble(0.3));
 
 	ProbDist *dist = ProbDist_from_py_dict(test_dict);
@@ -46,19 +47,20 @@ int main(int argc, char *argv[])
 
 	printf("*** Grid_refresh PASSED TEST\n");
 
-	printf("*** TESTING Grid_get_cur ****");
+	printf("*** TESTING Grid_get_cur ****\n");
 
 	Square_print(Grid_get_cur(test_create, 4, 9));
-	printf("OUT OF BOUNDS SHOULD WRAP");
+	printf("OUT OF BOUNDS: SHOULD WRAP\n");
 	Square_print(Grid_get_cur(test_create, 14, 0));
 
 	printf("*** Grid_get_cur PASSED TEST\n");
 
-	printf("*** TESTING Grid_step 100 times ****");
+	printf("*** TESTING Grid_step 100 times ****\n");
 
-	for (int i = 0; i < 100, i++) {
+	for (int i = 0; i < 100; i++) {
 		Grid_step(test_create);
 		Grid_print(test_create);
+		printf("\n\n");
 	}
 
 	printf("*** Grid_step PASSED TEST\n");

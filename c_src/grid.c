@@ -1,10 +1,19 @@
 #include "grid.h"
-#define gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats) gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats)
+
+Grid * Grid_new() {
+	Grid *self = malloc(sizeof(Grid));
+	self->rand_eng = NULL;
+	self->dist = NULL;
+	self->size = 0;
+	self->data = NULL;
+	self->data_next = NULL;
+	return self;
+}
 
 Grid * Grid_create(ProbDist *dist) {
 	int size = dist->size;
 	Grid *self = malloc(sizeof(Grid));
-	self->rand_eng = gsl_rand_alloc(gsl_rng_mt19937);
+	self->rand_eng = gsl_rng_alloc(gsl_rng_mt19937);
 	ProbDist *copy_of_dist = malloc(sizeof(ProbDist));
 	*copy_of_dist = *dist;
 	self->dist = copy_of_dist;
@@ -15,39 +24,45 @@ Grid * Grid_create(ProbDist *dist) {
 	return self;
 }
 
+void Grid_print(Grid *self) {
+	Square *cur;
+	for (int i = 0; i < self->size; ++i) {
+		for (int j = 0; j < self->size; ++j) {
+			cur = Grid_get_cur(self, i, j);
+			if (cur->kind == EMPTY)
+				printf(" ");
+			else if (cur->kind == PREY1)
+				printf("@");
+			else if (cur->kind == PREY2)
+				printf("#");
+			else
+				printf("^");
+		}
+		printf("\n");
+	}
+}
+
 void Grid_seed(Grid *self) {
+	Square *cur;
 	Square *next;
 	double rand;
 	for (int i = 0; i < (self->size * self->size); ++i) {
+		cur = &self->data[i];
 		next = &self->data_next[i];
-		rand = gsl_ran_flat(self->rand_eng, 0.0, 1.0);
-		if (rand <= self->dist->dist_predator) {
-			next->kind = PREDATOR;
-			next->repRate = 0.5;
-			next->eats = (float) gsl_ran_gaussian(self->rand_eng, 0.5, 0.1);
-		} else if (rand <= self->dist->dist_predator + self->dist->dist_prey1) {
-			next->kind = PREY1;
-			rext->repRate = 0.0;
-			next->eats = 0.0;
-		} else if (rand <= self->dist->dist_predator + self->dist->dist_prey1 + self->dist->dist_prey2) {
-			next->kind = PREY2;
-			next->repRate = 0.0;
-			next->eats = 0.0;
-		} else {
-			next->kind = EMPTY;
-			next->repRate = 0.0;
-			next->eats = 0.0;
-		}
+		Square_init_from_dist(cur, self->rand_eng, self->dist);
+		next->kind = cur->kind;
+		next->eats = cur->eats;
+		next->repRate = cur->repRate;
 	}
-	Grid_refresh(self);
 }
 
 void Grid_dealloc(Grid *self) {
 	free(self->data);
 	free(self->data_next);
-	gls_rng_free(self->rand_eng);
+	gsl_rng_free(self->rand_eng);
 	free(self->dist);
 	free(self);
+	return;
 }
 
 void Grid_refresh(Grid *self) {
@@ -69,19 +84,22 @@ void Grid_step(Grid *self) {
 
 	/* main loop, travels through whole grid */
 	for (int i = 0; i < self->size; ++i) {
-		for (int j = 0; j < self->size, ++j) {
+		for (int j = 0; j < self->size; ++j) {
 			cur = Grid_get_cur(self, i, j);
 			next = Grid_get_next(self, i, j);
-			if (cur->type == EMPTY) {
+			next->kind = cur->kind;
+			next->eats = cur->eats;
+			next->repRate = cur->repRate;
+			if (cur->kind == EMPTY) {
 				numPrey1 = 0;
 				prey1reproduces = false;
 				numPrey2 = 0;
 				prey2reproduces = false;
 				for (int k = -1; k <= 1; ++k) {
 					for (int l = -1; l <= 1; ++l) {
-						if (Grid_get_cur(self, i + k, j + l)->type == PREY1)
+						if (Grid_get_cur(self, i + k, j + l)->kind == PREY1)
 							++numPrey1;
-						if (Grid_get_cur(self, i + k, j + l)->type == PREY2)
+						if (Grid_get_cur(self, i + k, j + l)->kind == PREY2)
 							++numPrey2;
 					}
 				}
@@ -95,33 +113,52 @@ void Grid_step(Grid *self) {
 					next->kind = (int) floor(gsl_ran_flat(self->rand_eng, 0.0, 1.0) * 2 + 1);
 				}
 				else if (prey1reproduces) {
-					next->kind = 1;
+					next->kind = PREY1;
 				}
 				else if (prey2reproduces) {
-					next->kind = 2;
+					next->kind = PREY2;
 				}
 			}
-			else if (cur->type == PREY1 || cur->type == PREY2) {
+			else if (cur->kind == PREY1)  {
 				opts_size = 0;
 				Square *pred;
 				for (int k = -1; k <= 1; ++k) {
-					for (int l = -1 ; <= 1; ++l) {
+					for (int l = -1 ; l <= 1; ++l) {
 						pred = Grid_get_cur(self, i + k, j + l);
-						if (pred->type == 3 && gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
+						if (pred->kind  == 3 && pred->eats <= 0.5 &&gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
 							opts[opts_size] = pred;
 							opts_size++;
 						}
 					}
 				}
 				if (opts_size > 0) {
-					Square *opt = opts[floor(gsl_ran_flat(self->rand_eng, 0.0, 1.0) * opts_size)];
-					next->kind = 3;
+					Square *opt = opts[(int) floor(gsl_ran_flat(self->rand_eng, 0.0, 1.0) * opts_size)];
+					next->kind = PREDATOR;
 					next->repRate = contain_to_0_1(opt->repRate + gsl_ran_gaussian(self->rand_eng, self->dist->mut_repRate));
 					next->eats = contain_to_0_1(opt->eats + gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats));
 				}
 			}
-			else if (cur->type == PREDATOR) {
-				if (gsl_ran_flat(self->rand_eng, 0.0, 1.0) < self->deathRate) {
+			else if (cur->kind == PREY2) {
+				opts_size = 0;
+				Square *pred;
+				for (int k = -1; k <= 1; ++k) {
+					for (int l = -1 ; l <= 1; ++l) {
+						pred = Grid_get_cur(self, i + k, j + l);
+						if (pred->kind  == 3 && pred->eats > 0.5 &&gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
+							opts[opts_size] = pred;
+							opts_size++;
+						}
+					}
+				}
+				if (opts_size > 0) {
+					Square *opt = opts[(int) floor(gsl_ran_flat(self->rand_eng, 0.0, 1.0) * opts_size)];
+					next->kind = PREDATOR;
+					next->repRate = contain_to_0_1(opt->repRate + gsl_ran_gaussian(self->rand_eng, self->dist->mut_repRate));
+					next->eats = contain_to_0_1(opt->eats + gsl_ran_gaussian(self->rand_eng, self->dist->mut_eats));
+				}
+			}
+			else if (cur->kind == PREDATOR) {
+				if (gsl_ran_flat(self->rand_eng, 0.0, 1.0) < self->dist->deathRate) {
 					next->kind = 0;
 				}
 			}
@@ -132,10 +169,10 @@ void Grid_step(Grid *self) {
 
 Square * Grid_get_cur(Grid *self, int x, int y) {
 	/* READONLY */
-	return &self->data[((self->size * x) + y)];
+	return &self->data[((self->size * (x % self->size)) + (y % self->size))];
 }
 
 Square * Grid_get_next(Grid *self, int x, int y) {
 	/* WRITEONLY */
-	return &self->data_next[((self->size * x) + y)]
+	return &self->data_next[((self->size * (x % self->size)) + (y % self->size))];
 }

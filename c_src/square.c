@@ -36,3 +36,7 @@ void Square_init_from_dist(Square *self, gsl_rng *eng, ProbDist *dist) {
 	}
 	return;
 }
+
+void Square_print(Square *self) {
+	printf("Square{ kind: %i, eats: %f, repRate: %f }\n", self->kind, self->eats, self->repRate);
+}

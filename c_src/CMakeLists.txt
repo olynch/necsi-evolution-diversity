@@ -18,4 +18,7 @@ target_link_libraries(test_prob_dist ${PYTHON_LIBRARIES})
 add_executable(test_square test_square.c square.c common.c prob_dist.c)
 target_link_libraries(test_square ${GSL_LIBRARIES} ${PYTHON_LIBRARIES})
 
+add_executable(test_grid test_grid.c grid.c square.c prob_dist.c common.c)
+target_link_libraries(test_grid ${GSL_LIBRARIES} ${PYTHON_LIBRARIES})
+
 set(CMAKE_BUILD_TYPE Debug)

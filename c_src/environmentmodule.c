@@ -67,10 +67,10 @@ Environment_step(Environment *self) {
 	npy_char *cur_B;
 	int total_pred = 0;
 	double total_repRate = 0.0;
-	float max_repRate = 0.0;
-	float min_repRate = 0.0;
-	Py_XDECREF(self->stats_eats_data);
-	self->stats_eats_data = PyList_New(0);
+	/*float max_repRate = 0.0;*/
+	/*float min_repRate = 0.0;*/
+	/*Py_XDECREF(self->stats_eats_data);*/
+	/*self->stats_eats_data = PyList_New(0);*/
 
 	for (int i = 0; i < self->grid->size; ++i) {
 		for (int j = 0; j < self->grid->size; ++j) {
@@ -97,12 +97,12 @@ Environment_step(Environment *self) {
 				case 3:
 					total_pred++;
 					total_repRate += (double) cur->repRate;
-					if (cur->repRate > max_repRate) {
-						max_repRate = cur->repRate;
-					}
-					if (cur->repRate < min_repRate) {
-						min_repRate = cur->repRate;
-					}
+					/*if (cur->repRate > max_repRate) {*/
+						/*max_repRate = cur->repRate;*/
+					/*}*/
+					/*if (cur->repRate < min_repRate) {*/
+						/*min_repRate = cur->repRate;*/
+					/*}*/
 					if (cur->eats < 0.5) {
 						*cur_R = C_PREDATOR_1[0];
 						*cur_G = C_PREDATOR_1[1];
@@ -113,13 +113,13 @@ Environment_step(Environment *self) {
 						*cur_G = C_PREDATOR_2[1];
 						*cur_B = C_PREDATOR_2[2];
 					}
-					PyList_Append(self->stats_eats_data, PyFloat_FromDouble((double) cur->eats));
+					/*PyList_Append(self->stats_eats_data, PyFloat_FromDouble((double) cur->eats));*/
 					break;
 			}
 		}
 	}
-	PyList_Append(self->stats_maxrep, PyFloat_FromDouble((double) max_repRate));
-	PyList_Append(self->stats_minrep, PyFloat_FromDouble((double) min_repRate));
+	/*PyList_Append(self->stats_maxrep, PyFloat_FromDouble((double) max_repRate));*/
+	/*PyList_Append(self->stats_minrep, PyFloat_FromDouble((double) min_repRate));*/
 	PyList_Append(self->stats_avgrep, PyFloat_FromDouble(total_repRate / total_pred));
 	Py_RETURN_NONE;
 }

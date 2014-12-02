@@ -30,14 +30,14 @@ def init():
 
 def draw():
     PL.clf()
-    PL.subplot(1, 3, 1)
+    PL.subplot(1, 2, 1)
     PL.imshow(env.state, interpolation = 'nearest')
-    PL.subplot(1, 3, 2)
+    PL.subplot(1, 2, 2)
     PL.plot(env.stats_avgrep)
-    PL.plot(env.stats_maxrep)
-    PL.plot(env.stats_minrep)
-    PL.subplot(1, 3, 3)
-    PL.hist(env.stats_eats_data)
+    #PL.plot(env.stats_maxrep)
+    #PL.plot(env.stats_minrep)
+    #PL.subplot(1, 3, 3)
+    #PL.hist(env.stats_eats_data)
 
 def step():
     global env

@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	PyDict_SetItemString(test_dict, "dist", dist_dict);
 	PyDict_SetItemString(test_dict, "repRate", repRate_dict);
 	PyDict_SetItemString(test_dict, "mut", mut_dict);
-	PyDict_SetItemString(test_dict, "size", PyInt_FromLong(10l));
+	PyDict_SetItemString(test_dict, "size", PyInt_FromLong(1000l));
 	PyDict_SetItemString(test_dict, "deathRate", PyFloat_FromDouble(0.3));
 
 	ProbDist *dist = ProbDist_from_py_dict(test_dict);
@@ -55,11 +55,10 @@ int main(int argc, char *argv[])
 
 	printf("*** Grid_get_cur PASSED TEST\n");
 
-	printf("*** TESTING Grid_step 100 times ****\n");
+	printf("*** TESTING Grid_step 1000 times ****\n");
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 1000; i++) {
 		Grid_step(test_create);
-		Grid_print(test_create);
 		printf("\n\n");
 	}
 

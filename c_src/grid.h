@@ -9,6 +9,7 @@
 #include "gsl/gsl_randist.h"
 #include "common.h"
 #include <stdbool.h>
+#include <time.h>
 
 #ifndef GRID_H
 #define GRID_H

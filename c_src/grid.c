@@ -14,6 +14,7 @@ Grid * Grid_create(ProbDist *dist) {
 	int size = dist->size;
 	Grid *self = malloc(sizeof(Grid));
 	self->rand_eng = gsl_rng_alloc(gsl_rng_mt19937);
+	gsl_rng_set(self->rand_eng, (uint32_t)time(NULL));
 	ProbDist *copy_of_dist = malloc(sizeof(ProbDist));
 	*copy_of_dist = *dist;
 	self->dist = copy_of_dist;
@@ -45,7 +46,6 @@ void Grid_print(Grid *self) {
 void Grid_seed(Grid *self) {
 	Square *cur;
 	Square *next;
-	double rand;
 	for (int i = 0; i < (self->size * self->size); ++i) {
 		cur = &self->data[i];
 		next = &self->data_next[i];
@@ -125,7 +125,7 @@ void Grid_step(Grid *self) {
 				for (int k = -1; k <= 1; ++k) {
 					for (int l = -1 ; l <= 1; ++l) {
 						pred = Grid_get_cur(self, i + k, j + l);
-						if (pred->kind  == 3 && pred->eats <= 0.5 &&gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
+						if (pred->kind  == 3 && pred->eats <= 0.5 && gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
 							opts[opts_size] = pred;
 							opts_size++;
 						}
@@ -144,7 +144,7 @@ void Grid_step(Grid *self) {
 				for (int k = -1; k <= 1; ++k) {
 					for (int l = -1 ; l <= 1; ++l) {
 						pred = Grid_get_cur(self, i + k, j + l);
-						if (pred->kind  == 3 && pred->eats > 0.5 &&gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
+						if (pred->kind  == 3 && pred->eats > 0.5 && gsl_ran_flat(self->rand_eng, 0.0, 1.0) < pred->repRate) {
 							opts[opts_size] = pred;
 							opts_size++;
 						}

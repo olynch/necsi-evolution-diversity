@@ -1,4 +1,7 @@
 #include <Python.h>
+#include "numpy/ndarrayobject.h"
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#include "structmember.h"
 #include "prob_dist.h"
 #include "square.h"
 #include "common.h"
@@ -27,7 +30,7 @@ static void Environment_dealloc(Environment* self) {
 static int
 Environment_init(Environment *self, PyObject *args, PyObject *kwds) {
 	PyObject *probability_map = NULL;
-	ProbDist *dist;
+	ProbDist *dist = NULL;
 	static char *kwlist[] = {"probability_map", NULL};
 	if (! PyArg_ParseTupleAndKeywords(args, kwds, "|O", kwlist, &probability_map)) {
 		return -1;
@@ -38,81 +41,86 @@ Environment_init(Environment *self, PyObject *args, PyObject *kwds) {
 		dist = ProbDist_from_py_dict(probability_map);
 	}
 	self->grid = Grid_create(dist);
-	int dims[] = { dist->size, dist->size, 3 };
-	self->state = PyArray_ZEROES(3, dims, NPY_UINT8, 0);
+	long int dims[] = { dist->size, dist->size, 3 };
+	self->state = PyArray_ZEROS(3, dims, NPY_UINT8, 0);
 	/* needs to be np_array[size][size][3] of UINT8 */
 	self->stats_maxrep = PyList_New(0);
 	self->stats_minrep = PyList_New(0);
 	self->stats_avgrep = PyList_New(0);
 	self->stats_eats_data = PyList_New(0);
+	PyList_Append(self->stats_eats_data, PyFloat_FromDouble(0.5));
 	return 0;
 }
 
-const npy_uchar EMPTY[3] = { 0xff, 0xff, 0xff };
-const npy_uchar PREY1[3] = { 0x00, 0xff, 0xff };
-const npy_uchar PREY2[3] = { 0x00, 0x88, 0x00 };
-const npy_uchar PREDATOR_1[3] = { 0xff, 0x00, 0x00 };
-const npy_uchar PREDATOR_2[3] = { 0x88, 0x00, 0x00 };
+const npy_char C_EMPTY[3] = { 0xff, 0xff, 0xff };
+const npy_char C_PREY1[3] = { 0x00, 0xff, 0xff };
+const npy_char C_PREY2[3] = { 0x00, 0x88, 0x00 };
+const npy_char C_PREDATOR_1[3] = { 0xff, 0x00, 0x00 };
+const npy_char C_PREDATOR_2[3] = { 0x88, 0x00, 0x00 };
 
 static PyObject *
 Environment_step(Environment *self) {
 	Grid_step(self->grid);
 	Square *cur;
-	npy_uchar *cur_R;
-	npy_uchar *cur_G;
-	npy_uchar *cur_B;
+	npy_char *cur_R;
+	npy_char *cur_G;
+	npy_char *cur_B;
 	int total_pred = 0;
-	double eats_total = 0.0;
-	float max_eats = 0.0;
-	float min_eats = 0.0;
+	double total_repRate = 0.0;
+	float max_repRate = 0.0;
+	float min_repRate = 0.0;
 	Py_XDECREF(self->stats_eats_data);
 	self->stats_eats_data = PyList_New(0);
 
 	for (int i = 0; i < self->grid->size; ++i) {
 		for (int j = 0; j < self->grid->size; ++j) {
 			cur = Grid_get_cur(self->grid, i, j);
+			cur_R = (npy_char *) PyArray_GETPTR3(self->state, i, j, 0);
+			cur_G = (npy_char *) PyArray_GETPTR3(self->state, i, j, 1);
+			cur_B = (npy_char *) PyArray_GETPTR3(self->state, i, j, 2);
 			switch (cur->kind) {
-				cur_R = PyArray_GETPTR3(self->state, i, j, 0);
-				cur_G = PyArray_GETPTR3(self->state, i, j, 1);
-				cur_B = PyArray_GETPTR3(self->state, i, j, 2);
-				case EMPTY:
-					*cur_R = EMPTY[0];
-					*cur_G = EMPTY[1];
-					*cur_B = EMPTY[2];
-				case PREY1:
-					*cur_R = PREY1[0];
-					*cur_G = PREY1[1];
-					*cur_B = PREY1[2];
-				case PREY2:
-					*cur_R = PREY2[0];
-					*cur_G = PREY2[1];
-					*cur_B = PREY2[2];
-				case PREDATOR:
+				case 0:
+					*cur_R = C_EMPTY[0];
+					*cur_G = C_EMPTY[1];
+					*cur_B = C_EMPTY[2];
+					break;
+				case 1:
+					*cur_R = C_PREY1[0];
+					*cur_G = C_PREY1[1];
+					*cur_B = C_PREY1[2];
+					break;
+				case 2:
+					*cur_R = C_PREY2[0];
+					*cur_G = C_PREY2[1];
+					*cur_B = C_PREY2[2];
+					break;
+				case 3:
 					total_pred++;
-					eats_total += (double) cur->eats;
-					if (cur->eats > max_eats) {
-						max_eats = cur->eats;
+					total_repRate += (double) cur->repRate;
+					if (cur->repRate > max_repRate) {
+						max_repRate = cur->repRate;
 					}
-					if (cur->eats < min_eats) {
-						min_eats = cur->eats;
+					if (cur->repRate < min_repRate) {
+						min_repRate = cur->repRate;
 					}
 					if (cur->eats < 0.5) {
-						*cur_R = PREDATOR_1[0];
-						*cur_G = PREDATOR_1[1];
-						*cur_B = PREDATOR_1[2];
+						*cur_R = C_PREDATOR_1[0];
+						*cur_G = C_PREDATOR_1[1];
+						*cur_B = C_PREDATOR_1[2];
 					}
 					else {
-						*cur_R = PREDATOR_2[0];
-						*cur_G = PREDATOR_2[1];
-						*cur_B = PREDATOR_2[2];
+						*cur_R = C_PREDATOR_2[0];
+						*cur_G = C_PREDATOR_2[1];
+						*cur_B = C_PREDATOR_2[2];
 					}
-					PyList_Append(self->stats_eats_data, PyFloat_FromDouble((double) self->eats));
+					PyList_Append(self->stats_eats_data, PyFloat_FromDouble((double) cur->eats));
+					break;
 			}
 		}
 	}
-	PyList_Append(self->stats_maxrep, PyFloat_FromDouble((double) max_eats));
-	PyList_Append(self->stats_minrep, PyFloat_FromDouble((double) min_eats));
-	PyList_Append(self->stats_avgrep, PyFloat_FromDouble(eats_total / total_pred));
+	PyList_Append(self->stats_maxrep, PyFloat_FromDouble((double) max_repRate));
+	PyList_Append(self->stats_minrep, PyFloat_FromDouble((double) min_repRate));
+	PyList_Append(self->stats_avgrep, PyFloat_FromDouble(total_repRate / total_pred));
 	Py_RETURN_NONE;
 }
 
@@ -190,6 +198,7 @@ PyMODINIT_FUNC initenvironment(void)
 
     m = Py_InitModule3("environment", module_methods,
                        "Module that contains the environment class for simulation.");
+	import_array();
 
     if (m == NULL)
       return;
